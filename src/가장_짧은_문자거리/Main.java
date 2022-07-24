@@ -5,6 +5,8 @@ public class Main {
         char[] stringToChar = s.toCharArray();
         int[] rightDirection = new int[stringToChar.length];
         int[] leftDirection = new int[stringToChar.length];
+//        rightDirection[0]=stringToChar.length;
+//        leftDirection[stringToChar.length-1] = stringToChar.length;
         String answer = "";
 
         calc(t, stringToChar, rightDirection, leftDirection);
