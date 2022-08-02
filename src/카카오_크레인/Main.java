@@ -1,52 +1,48 @@
 package 카카오_크레인;
 
+import java.util.Stack;
+
 public class Main {
     public int solution(int[][] board, int[] moves) {
         int answer = 0;
-        String bucket = "";
-        boolean loop = true;
-        for (int move : moves) {
-            int moveLocation = move - 1;
-            bucket = extractBucket(board, moveLocation, bucket);
+        int moveLen = moves.length;
+        Stack<Integer> bucket = new Stack<>();
+
+        for(int i = 0; i<moveLen; i++) {
+            int m = moves[i]-1; //배열의 index는 0부터니까 1을 빼주었음
+
+            for (int x = 0; x < board.length; x++) {
+                if (board[x][m] != 0) { //크레인이 잡는곳이 빈곳이 아닐때
+                    answer = extractDoll(board, moves, answer, bucket, i, m, x);
+                    board[x][m]= 0; //크레인이 잡은곳 비우기
+                    break; //맨위의 것을 잡고 끝내야함, break를 안쓰면 board[1][m]에서 꺼내는게 아니라 board[2][m]까지도 꺼내버림
+                }
+            }
+
         }
 
-        while (loop) {
-            for (int doll = 1; doll <= 100; doll++) {
-                String dollOverlap="<"+String.valueOf(doll)+">"+"<"+String.valueOf(doll)+">";
-                while (bucket.contains(dollOverlap)) {
-                    bucket = bucket.replaceFirst(dollOverlap, "");
-                    answer += 2;
-                }
-            }
-            for(int doll = 1; doll <= 100; doll++){
-                String dollOverlap=String.valueOf(doll)+","+String.valueOf(doll);
-                if(bucket.contains(dollOverlap)){
-                    loop=true;
-                   break;
-                }
-                loop=false;
-            }
-        }
-        System.out.println(bucket);
+
         return answer;
     }
 
-    private String extractBucket(int[][] board, int moveLocation, String bucket) {
-        for (int x = 0; x < board[0].length; x++) {
-            if (board[x][moveLocation] != 0) {
-                bucket += "<"+board[x][moveLocation]+">";
-                board[x][moveLocation] = 0;
-                return bucket;
+    private int extractDoll(int[][] board, int[] moves, int answer, Stack<Integer> bucket, int i, int m, int x) {
+        if (!bucket.empty()) { //bucket이 비어있지않을때
+            if (bucket.peek() == board[x][m]) {
+                bucket.pop();
+                answer += 2;
+            } else {
+                bucket.push(board[x][m]);
             }
+        } else {
+            bucket.push(board[x][m]);
         }
-        return bucket;
-
+        return answer;
     }
 
     public static void main(String[] args) {
         Main T = new Main();
         int[][] board =
-                {{0, 0, 0, 0, 0},
+                       {{0, 0, 0, 0, 0},
                         {0, 0, 1, 0, 3},
                         {0, 2, 5, 0, 1},
                         {4, 2, 4, 4, 2},
