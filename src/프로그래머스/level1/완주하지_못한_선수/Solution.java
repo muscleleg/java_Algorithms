@@ -36,7 +36,7 @@ public class Solution {
         while (pIterator.hasNext()){
             Map.Entry<String, Integer> p = pIterator.next();
             if(p.getValue()>0){
-                answer+=p.getKey();
+                answer += p.getKey();
             }
         }
         return answer;
